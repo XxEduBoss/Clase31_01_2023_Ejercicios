@@ -67,11 +67,34 @@ public class UtilidadesMundial {
     //EJERCICIO 3
     public static Map<Pais, List<Seleccion>> getSeleccionesPais(Map<Seleccion, List<Jugador>> mapa){
 
+        Map<Pais, List<Seleccion>> mapaSolucion = new HashMap<>();
+        //MapaSolucion --> España --> [Selección Andaluza]
+        //2MapaSolucion --> España --> [Selección Andaluza, Selección Madrid]
 
 
+        //Selección Andaluza --> España
+        //2Selección Madrid --> España
+        for(Seleccion seleccion: mapa.keySet()){
 
+            //MapaSolucion --> tiene --> España?
+            //2MapaSoucion --> tiene --> España?
+            if (mapaSolucion.containsKey(seleccion.getPais())){
 
-        return null;
+                //2MapaSolucion --> España --> [Selección Andaluza, Selección Madrid]
+                mapaSolucion.get(seleccion.getPais()).add(seleccion);
+
+            }else{
+                //MapaSolucion --> España --> []
+                mapaSolucion.put(seleccion.getPais(), new ArrayList<>());
+
+                //MapaSolucion --> España --> [Selección Andaluza]
+                mapaSolucion.get(seleccion.getPais()).add(seleccion);
+
+            }
+
+        }
+
+        return mapaSolucion;
     }
 
 
@@ -79,11 +102,47 @@ public class UtilidadesMundial {
     //EJERCICIO 4
     public static Map<Continente, List<Liga>> getLigasPorPais(Map<Seleccion, List<Jugador>> mapa){
 
+        Map<Continente, List<Pais>> paisesPorContinente = new HashMap<>();
 
+        for (Seleccion seleccion : mapa.keySet()){
 
+            if (paisesPorContinente.containsKey(seleccion.getContinente())){
 
+                paisesPorContinente.get(seleccion.getContinente()).add(seleccion.getPais());
 
-        return null;
+            }else{
+
+                paisesPorContinente.put(seleccion.getContinente(), new ArrayList<>());
+                paisesPorContinente.get(seleccion.getContinente()).add(seleccion.getPais());
+
+            }
+
+        }
+
+        Map<Continente, List<Liga>> mapaSolucion = new HashMap<>();
+        paisesPorContinente.keySet().forEach(continente -> mapaSolucion.put(continente, new ArrayList<>()));
+
+        for(Seleccion seleccion : mapa.keySet()){
+
+            for (Jugador jugador : mapa.get(seleccion)){
+
+                Liga liga = jugador.getLiga();
+
+                for (Continente continente : paisesPorContinente.keySet()){
+
+                    if (paisesPorContinente.get(continente).contains(liga.getPais())){
+
+                        mapaSolucion.get(continente).add(liga);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return mapaSolucion;
     }
 
 
@@ -92,10 +151,13 @@ public class UtilidadesMundial {
 
         //EJERCICIO1
         System.out.println("Ejercicio 1 --> " + crearMapa() + "\n");
+
         //EJERCICIO 2
         System.out.println("Ejercicio 2 --> " + getPorPaisyPosicion(crearMapa(), pais1, Posicion.DL) + "\n");
+
         //EJERCICIO 3
         System.out.println("Ejercicio 3 --> " + getSeleccionesPais(crearMapa()) + "\n");
+
         //EJERCICIO 4
         System.out.println("Ejercicio 4 --> " + getLigasPorPais(crearMapa()));
 
